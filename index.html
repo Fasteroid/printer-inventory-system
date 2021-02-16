@@ -1,17 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html style="background-color: #2f3234;">
 
 <head>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        // JS goes up here if you wanna experiment with it
+        console.log("under development");
+    </script>
+
     <style>
-        body {
-            background-color: #2f3234;
-        }
+        /*Stolen from StackOverflow*/
+        .content {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            font-family:'Courier New', Courier, monospace;
+            font-size: 30px;
+            color: #ffffff;
+        } 
     </style>
+
 </head>
 
 <body>
-    This is a test web page
+    <div class="content">
+        console.<span style="color: #ffff33;">log</span>(<span style="color: #ffa07b;">"under development"</span>);
+    </div>
 </body>
 
 </html>
