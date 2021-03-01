@@ -3,14 +3,11 @@
 
 <head>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script>
-        // JS goes up here if you wanna experiment with it
-        console.log("under development");
-    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> 
 
     <style>
-        /*Stolen from StackOverflow*/
+
+        /* Stolen from StackOverflow, this 'content' class will center stuff in HTML */
         .content {
             position: absolute;
             left: 50%;
@@ -20,15 +17,31 @@
             font-family:'Courier New', Courier, monospace;
             font-size: 30px;
             color: #ffffff;
-        } 
+        }
+
+        /* Check prototype.js to see where I use this! */        
+        .htmlListElement {
+            background-color: #666666;
+            border-width: 10px;
+            border-color: #ffffff;
+            border: solid;
+        }
+
     </style>
 
 </head>
 
 <body>
-    <div class="content">
-        console.<span style="color: #ffff33;">log</span>(<span style="color: #ffa07b;">"under development"</span>);
-    </div>
+
+    <button onclick="appendListElement()">add element</button>
+    <button onclick="removeListElement()">remove element</button>
+
+    <!-- this div starts empty; we'll add stuff to it later -->
+    <div id="list-box" class="content"></div>
+    
 </body>
+
+    <!-- This has to load after the DOM elements it manipulates -->
+    <script src="prototype.js"></script>
 
 </html>
