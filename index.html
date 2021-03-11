@@ -7,16 +7,34 @@
 
     <style>
 
-        /* Stolen from StackOverflow, this 'content' class will center stuff in HTML */
-        .content {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            -webkit-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-            font-family:'Courier New', Courier, monospace;
-            font-size: 30px;
-            color: #ffffff;
+        body{
+
+            /* Global font */
+            font: 100% Arial, Helvetica, sans-serif;
+
+            /* Border stuff */
+            background-color: #ffffff;
+            border-width: 2px;
+            border-color: #000000;
+            margin: 5%;
+
+        }
+
+        middle {
+
+            /* Use grid type layout */
+            display: grid;
+            grid-template-columns: 1fr 4fr 1fr;
+            gap: 5px;
+
+        }
+
+        /* Wow, I can't believe it actually worked! This targets all direct children of 'middle' */
+        middle > * {
+
+            padding: 5px;
+            background-color: #ffffff;
+
         }
 
         /* Check prototype.js to see where I use this! */        
@@ -26,6 +44,7 @@
             border-color: #ffffff;
             border: solid;
         }
+        
 
     </style>
 
@@ -33,10 +52,14 @@
 
 <body>
 
-    <button onclick="appendListElement()">add element</button>
+
 
     <!-- this div starts empty; we'll add stuff to it later -->
-    <div id="list-box" class="content"></div>
+    <middle>
+        <div>LEFT</div>
+        <div>MIDDLE</div>
+        <div>RIGHT</div>
+    </middle>
     
 </body>
 

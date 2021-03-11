@@ -1,0 +1,132 @@
+body  {
+	font: 100% Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	min-width:700px;
+}
+h2{
+	text-align:center;
+	color:#333;
+}
+#container {
+	margin:10px;
+	background: #FFFFFF;
+	text-align: left;
+	padding-bottom:10px;
+}
+#row{
+display:flex;
+}
+#row > div{
+	display:flex;
+	flex-direction:column;
+	flex-grow:1;
+	flex-shrink:0;
+}
+#hdr{
+	background-color:#669966;
+	color:#FFF;
+	padding:0.5% 1%;
+	margin-top:15px;
+	/*margin-bottom:5px;*/
+	font-weight:bold;
+	width:98%;
+	border:1px solid #669966;
+}
+#date {
+	/*float: left;*/
+	width: 8%;
+	/*margin-left:15px;*/
+	border-left:1px solid #999;
+}
+#from {
+	/*float: right;*/
+	width: 18%;
+	/*margin-right:15px;*/
+	border-right:1px solid #999;
+}
+#date, #title, #from {
+	height:14px;
+	background: #EBEBEB;
+	padding: 5px 1%;
+	border-bottom:1px solid #999;
+	font-weight:bold;
+	background-image:url(img/bkg.png);
+	display:flex;
+}
+#title {
+	/*margin: 0 355px 0 125px;*/
+width:68%;
+}
+
+#d,#dAlt{
+	/*float: left;*/
+	width: 8%;
+	/*margin-left:15px;*/
+border-left:1px solid #999;
+
+}
+#f,#fAlt{
+	/*float: right;*/
+	width: 18%;
+	/*margin-right:15px;*/
+border-right:1px solid #999;
+}
+#d,#t,#f,#tRed,#dAlt,#tAlt,#fAlt,#tRedAlt,#tB,#tRedB,#tAltB,#tRedAltB {
+	padding: 0.5% 1%;
+	border-bottom:1px solid #999;
+	/*display:flex;
+flex-wrap:wrap;*/
+}
+#t,#tRed,#tAlt,#tRedAlt,#tB,#tRedB,#tAltB,#tRedAltB {
+	/*margin: 0 15px 0 15px;*/
+/*display:flex;*/
+	width:68%;
+}
+#t div > div,#tRed div > div,#tAlt div > div,#tRedAlt div > div,#tB div > div,#tRedB div > div,#tAltB div > div,#tRedAltB div > div{display:block;}
+/*#t *,#tRed *,#tAlt *,#tRedAlt *,#tB *,#tRedB *,#tAltB *,#tRedAltB *{display:block;}*/
+#t a,#tRed a,#tAlt a,#tRedAlt a,#tB a,#tRedB a,#tRedAltB a{
+	text-decoration: none;
+	display: block;
+	height: 100%;
+	width: 100%;
+	clear:both;
+}
+#t a,#tAlt a,#tB a ,#tAltB a{
+	color:#000000;
+}
+/*#t div div a,#tAlt div div a,#tB div div a,#tAltB div div a{
+	color:#00467f;
+}*/
+#tRed a,#tRedAlt a,#tRedB a,#tRedAltB a {
+	color:#ff0000;
+}
+#d,#t,#f,#tB {
+	background: #fff;
+}
+#dAlt,#tAlt,#fAlt,#tRedAlt,#tAltB,#tRedAltB {
+	background: #eee;
+}
+#tB,#tRedB,#tAltB,#tRedAltB {
+	font-weight:bold;
+}
+
+
+#t:hover,#tRed:hover,#tAlt:hover,#tRedAlt:hover,#tB:hover,#tRedB:hover,#tAltB:hover,#tRedAltB:hover {
+	background:#cee0b3;
+	cursor: pointer;
+}
+
+.announcement-body{
+	background-color:#fff; border:1px solid #fff; padding:5px; margin-top:10px; width:98%; flex-shrink:0;
+}
+.announcement-body a{
+	color:#00467f !important;
+	font-weight:bold;
+	text-decoration: underline !important;
+	display: inline !important;
+	clear:none;
+}
+.announcement-body span{
+	display: inline !important;
+	clear:none;
+}
