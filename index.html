@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html style="background-color: #2f3234;">
-<script src="global.js"></script>
 
 <head>
 
+    <script src="global.js"></script>
+    <script src="sorttable.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> 
     <link rel="stylesheet" href="style.css">
 
@@ -13,16 +14,23 @@
 
     <!-- this div starts empty; we'll add stuff to it later -->
     <middle>
-        <div>LEFT</div class="panel">
-        <table class="panel">
-            <tr>
-                <td>Table</td>
-            </tr>
-            <tr id="table-header-box">
-                <td><centered>Action</centered</td>
-            </tr>
+        <div>LEFT</div>
+        <table class="sortable">
+            <thead>
+                <tr id="list-headers">
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tfoot style="display: table-header-group"> <!-- Display with the header WITHOUT breaking sorttable.js -->
+                <tr id="list-inputs">
+                    <td><button onclick="AddListElement()">Add</button></td>
+                </tr>
+            </tfoot>
+            <tbody id="list">
+
+            </tbody>
         </table>
-        <div>RIGHT</div class="panel">
+        <div>RIGHT</div>
     </middle>
     
 </body>
