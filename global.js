@@ -1,5 +1,1 @@
-const PRINTER_ATTRIBUTES = []
-
-class Printer {
-    
-}
+const PRINTER_ATTRIBUTES = ["Bar Code","Category","Location","Serial Number","Manufacturer","Division","Department","Campus"]
