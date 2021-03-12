@@ -1,0 +1,57 @@
+body{
+
+    /* Global font */
+    font: 100% Arial, Helvetica, sans-serif;
+
+    /* Move content away from the very edges of the page (it looks bad) */
+    background-color: #ffffff;
+    border-width: 2px;
+    border-color: #000000;
+
+}
+
+middle {
+
+    /* Use grid type layout */
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    gap: 5px;
+    background-color: #ffffff;
+
+}
+
+/* Gives all children of the middle section padding */
+middle > * {
+    padding: 5px;
+}
+
+/* Formatting for buttons */
+button {
+    font-size: 12pt;
+    background-color: #00b150;
+    padding: 5px 6px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+/* Help the user see when they click a button */
+button:active {
+    background-color: #00843c;
+    transform: translateY(1px);
+}
+
+centered {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    align-items: flex-start;
+    padding: 5px 6px;
+    border: 1px solid black;
+}
+
+th {
+    padding: 0px;
+}
+
+.tableHeader {
+    width: 100%;
+}
