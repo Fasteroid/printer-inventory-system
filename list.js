@@ -39,7 +39,7 @@ class ListEntry {
                 let data = document.createElement("td"); // create table data
                     data.className = "entry";
                     data.innerText = value;
-                self.HTML.prepend(data); // end table data
+                self.HTML.append(data); // end table data
             }  
         
             let data = document.createElement("td"); // create table data
@@ -74,25 +74,36 @@ function AddListElement(){
     FirstInput.focus();  // focus the first input so that the user can rapid-fire add stuff with tab
 }
 
-// ---------------- <GENERATE LIST HEADER BUTTONS> ---------------- //
-for (const attribute of PRINTER_ATTRIBUTES) {
+
+// ---------------- GENERATE LIST HEADER BUTTONS ---------------- //
+for (const attribute of PRINTER_ATTRIBUTES ) {
 
     let data = document.createElement("th"); // create table header
         data.innerText = attribute;
-    ListHeaderHTML.prepend(data); // end table header - prepend to keep 'Action' header at the end
+    ListHeaderHTML.append(data); // end table header
 
 }
+let data = document.createElement("th"); // create table header 'Action' last
+    data.innerText = "Action";
+ListHeaderHTML.append(data); // end table header
+// ------------------------------------------------------------- //
 
-// ---------------- <GENERATE LIST INPUT UTILITY> ---------------- //
+
+// ---------------- GENERATE LIST INPUT UTILITY ---------------- //
 for (const attribute of PRINTER_ATTRIBUTES) {
 
     let data = document.createElement("td"); // create table data
         let input  = document.createElement("input");  // create input
             input.className = "tableInput"
-        data.appendChild(input); // end input
-    ListInputHTML.prepend(data); // end table data
-
+        data.append(input); // end input input
+    ListInputHTML.append(data); // end table data
+    
     ListInputs[attribute] = input;  // store these for easy access later
     FirstInput = input; // since we're prepending elements this will actually be the correct thing in the end
     
 }
+let button = document.createElement("button") // create 'Add' button last
+    button.onclick = AddListElement;
+    button.innerText = "Add"
+ListInputHTML.append(button); // end button
+// ------------------------------------------------------------- //
