@@ -99,7 +99,9 @@ for (const attribute of PRINTER_ATTRIBUTES) {
     ListInputHTML.append(data); // end table data
     
     ListInputs[attribute] = input;  // store these for easy access later
-    FirstInput = input; // since we're prepending elements this will actually be the correct thing in the end
+    if( FirstInput == undefined ){ // snag first input
+        FirstInput = input;
+    }
     
 }
 let button = document.createElement("button") // create 'Add' button last
