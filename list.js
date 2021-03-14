@@ -1,3 +1,12 @@
+/*
+    list.js
+
+    Manages the printer list and addition/removal of data.
+    TODO: make data here update when it updates serverside, rather than immediately.
+
+    First Edit:  Fasteroid
+    Authors:  Fasteroid
+*/
 
 
 const ListHeaderHTML = document.getElementById("list-headers");

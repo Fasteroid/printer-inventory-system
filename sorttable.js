@@ -13,6 +13,8 @@
   Thanks to many, many people for contributions and suggestions.
   Licenced as X11: http://www.kryogenix.org/code/browser/licence.html
   This basically means: do what you want with it.
+
+  Tweaked by Fasteroid on 3/12/2021 to remove the arrows (see lines with ////)
 */
 
 
