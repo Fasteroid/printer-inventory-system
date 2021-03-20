@@ -1,5 +1,4 @@
 /*----------------------------------------------------------------
- *  
  *  requesthandler.js
  *  Mini Server-Side API for file storage!
  *  NOTE: Requires an API token.  Don't use without the API token.
@@ -10,6 +9,7 @@
 
 
 const Files = require('fs');
+const Printer = require('../printer.js');
 const SECRET_API_TOKEN = Files.readFileSync('./master_key.txt');
 console.log("[COMPSCI III]: SERVERSIDE LOADED, TOKEN = "+SECRET_API_TOKEN);
 
@@ -41,22 +41,14 @@ console.log("[COMPSCI III]: SERVERSIDE LOADED, TOKEN = "+SECRET_API_TOKEN);
     }
 ///
 
-class Printer {
-    /** Constructs a new printer object. Don't modify anything in this class from externally. 
-     * @param printerJson json data acquired from clientside
+class ServerPrinter extends Printer {
+    /** Constructs a new printer object. Don't modify anything in this class from outside. 
+     * @param obj clientside data
     */
-    constructor(printerJson){
+     constructor(obj){
         Database.uuid++;
-        this.uuid = Database.uuid;
-        this.barcode = printerJson.barcode;
-        this.name = printerJson.name;
-        this.category = printerJson.category;
-        this.serial = printerJson.serial;
-        this.manufacturer = printerJson.manufacturer;
-        this.division = printerJson.division;
-        this.department = printerJson.department;
-        this.campus = printerJson.campus;
-        this.active = printerJson.active;
+        this.uuid      = Database.uuid;
+        super(obj);
     }
 }
 
