@@ -30,6 +30,4 @@ class Printer {
     }
 }
 
-if( window.origin != "null" ){ // chrome
-    module.exports = Printer;
-}
+module.exports = Printer;

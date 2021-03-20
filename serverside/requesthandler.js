@@ -52,7 +52,9 @@ class ServerPrinter extends Printer {
     }
 }
 
+let ServerUpdates = [];
 let ServerFunctions = {
+
     /** Adds a printer serverside 
      * @param {Request} req Incoming request data
      * @param {Response} res Output response data
@@ -60,9 +62,27 @@ let ServerFunctions = {
     createPrinter(req, res){
         let newPrinter = new Printer(req.json)
         Database.printers[ newPrinter.uuid ] = newPrinter; // define by UUID
-        res.json(newPrinter).status(200).send();
+
+        ServerUpdates.push({
+            action: "createPrinter",
+            json: newPrinter
+        })
+
+        res.status(200).send();
         saveDatabase();
+    },
+
+    /** Long-polling response
+     * @param {Request} req Incoming request data
+     * @param {Response} res Output response data
+     */
+    ping(req, res){
+        let update = ServerUpdates.pop();
+        if( update ){ // if an update exists...
+            res.json(update).status(200).send()
+        }
     }
+
 }
 
 /** Handler function for incoming requests
