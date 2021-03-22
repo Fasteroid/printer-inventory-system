@@ -1,7 +1,7 @@
 /*
     printer.js
 
-    Printer class for holding printer data.
+    Printer class for holding printer data.  Shared.
 
     First Edit:  Fasteroid
     Authors:  Fasteroid

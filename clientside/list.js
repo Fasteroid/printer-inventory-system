@@ -1,16 +1,15 @@
 /*
     list.js
 
-    Manages the printer list and addition/removal of data.
-    TODO: make data here update when it updates serverside, rather than immediately.
+    Manages the printer list's HTML components.
 
     First Edit:  Fasteroid
     Authors:  Fasteroid
 */
 
-if( window.origin!="null" ){ // CORS
-    const Printer = require("../printer");
-}
+//if( window.origin!="null" ){ // CORS
+    //const Printer = require("../printer");
+//}
 
 const ListHeaderHTML = document.getElementById("list-headers");
 const ListInputHTML  = document.getElementById("list-inputs");
@@ -18,6 +17,22 @@ const ListHTML       = document.getElementById("list");
 const ListInputs     = { };
 let   Printers       = [ ];
 let   FirstInput;    // will be the first input so we can focus it after adding something
+
+/** Sends a json-based request to the server
+ * @param {JSON} data token, server command, additional data
+ */
+async function ServerCommand(data){
+    return await fetch(
+        "http://68.84.141.134",
+        {
+            headers: {
+                "content-type":"application/json"
+            },
+            body: JSON.stringify(data),
+            method: "POST"
+        }
+    );
+}
 
 class ClientPrinter extends Printer {
     constructor(data){
@@ -64,7 +79,6 @@ class ListEntry {
 function AddListElement(){
     let data = { }
     for ( const attribute in Printer.attributes ) {
-        console.log(attribute)
         let testValue = ListInputs[attribute].value
         if( testValue != "" ){ // avoid setting nonexistence
             data[attribute] = testValue;
@@ -74,8 +88,10 @@ function AddListElement(){
         }
         ListInputs[attribute].value = ""; // clear out values as we read them
     }  
-    let entry = new ListEntry( new ClientPrinter(data) );
-    ListHTML.prepend( entry.HTML ); 
+    ServerCommand({
+        command: "createPrinter",
+        data: data
+    })
     FirstInput.focus();  // focus the first input so that the user can rapid-fire add stuff with tab
 }
 
@@ -114,3 +130,5 @@ let button = document.createElement("button") // create 'Add' button last
     button.innerText = "Add"
 ListInputHTML.append(button); // end button
 // ------------------------------------------------------------- //
+
+
