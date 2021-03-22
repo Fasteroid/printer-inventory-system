@@ -138,4 +138,7 @@ function Handler(req, res){
 
 }
 
-module.exports = Handler;
+try { // this will work serverside
+    module.exports = Handler;
+}
+catch(e){}
