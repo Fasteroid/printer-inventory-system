@@ -10,7 +10,8 @@
 
 const Files = require('fs');
 const Printer = require('../printer.js');
-const SECRET_API_TOKEN = Files.readFileSync('./master_key.txt');
+const SECRET_API_TOKEN = Files.readFileSync('./master_key.txt');  // repo is public, not putting this in plaintext...
+const TIMEOUT_INTERVAL = 5000; // refresh long polling every x ms
 console.log("[COMPSCI III]: SERVERSIDE LOADED, TOKEN = "+SECRET_API_TOKEN);
 
     
@@ -52,8 +53,28 @@ class ServerPrinter extends Printer {
     }
 }
 
-let ServerUpdates = [];
-let ServerFunctions = {
+let Clients = [];
+
+/** Sends an update to all clients */ 
+function ClientCommand(upd){
+    for( let id in Clients ){
+        Clients[id].json(upd).status(200).send();
+        delete Clients[id];
+    }
+}
+
+/** Reconnects all clients */
+function retry(){
+    console.log("Timing out clients...")
+    for( let id in Clients ){
+        Clients[id].status(502).send();
+        Clients[id] = null;
+        delete Clients[id];
+    }
+}
+setInterval( retry, TIMEOUT_INTERVAL ); // timeouts
+
+let ServerCommands = {
 
     /** Adds a printer serverside 
      * @param {Request} req Incoming request data
@@ -63,8 +84,8 @@ let ServerFunctions = {
         let newPrinter = new Printer(req.json)
         Database.printers[ newPrinter.uuid ] = newPrinter; // define by UUID
 
-        ServerUpdates.push({
-            action: "createPrinter",
+        ClientCommand({
+            command: "createPrinter",
             json: newPrinter
         })
 
@@ -77,10 +98,7 @@ let ServerFunctions = {
      * @param {Response} res Output response data
      */
     ping(req, res){
-        let update = ServerUpdates.pop();
-        if( update ){ // if an update exists...
-            res.json(update).status(200).send()
-        }
+        Clients.push(res); // the idea here is to keep Clients filled with all active clients
     }
 
 }
@@ -93,12 +111,12 @@ function Handler(req, res){
 
     const body = req.body;
 
-    if( body.token != SECRET_API_TOKEN ){ 
+    console.log(body)
+    if( body.command == undefined ){ 
         return false; // forward request to other stuff in my server box
     }
-
-    if( ServerFunctions[body.function] ){ // hand off this request to its respective function
-        ServerFunctions[body.function](body, res);
+    else if( ServerCommands[body.command] ){ // hand off this request to its respective function
+        ServerCommands[body.command](body, res);
     }
     else{
         res.status(500).send("bad request");
