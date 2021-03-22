@@ -7,6 +7,8 @@
     Authors:  Fasteroid
 */
 
+
+
 let ClientCommands = {
 
     /** Adds a printer clientside
@@ -40,3 +42,16 @@ async function longPolling() {
     
 }
 longPolling();
+
+
+async function init(){
+    let data = await ServerCommand({
+        command: "getPrinters"
+    })
+    let json = await data.json()
+    console.log(json)
+    for( printer of json ){
+        ClientCommands.createPrinter(printer);
+    }
+}
+init();
