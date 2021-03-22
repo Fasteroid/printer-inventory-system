@@ -43,13 +43,19 @@ console.log("[COMPSCI III]: SERVERSIDE LOADED, TOKEN = "+SECRET_API_TOKEN);
 ///
 
 class ServerPrinter extends Printer {
-    /** Constructs a new printer object. Don't modify anything in this class from outside. 
+    /** Constructs a new printer object and automatically puts it in the database.
      * @param obj clientside data
     */
-     constructor(obj){
-        Database.uuid++;
-        this.uuid      = Database.uuid;
+    constructor(obj){
         super(obj);
+        this.uuid = Database.uuid;
+        Database.uuid++;
+        Database.printers[this.uuid] = this;
+        saveDatabase();
+    }
+    remove(){
+        delete Database[this.uuid];
+        saveDatabase();
     }
 }
 
@@ -65,7 +71,7 @@ function ClientCommand(upd){
 
 /** Reconnects all clients */
 function retry(){
-    console.log("Timing out clients...")
+    // console.log("Timing out clients...")
     for( let id in Clients ){
         Clients[id].status(502).send();
         Clients[id] = null;
@@ -77,27 +83,32 @@ setInterval( retry, TIMEOUT_INTERVAL ); // timeouts
 let ServerCommands = {
 
     /** Adds a printer serverside 
-     * @param {Request} req Incoming request data
+     * @param {JSON} body Incoming request data
      * @param {Response} res Output response data
      */
-    createPrinter(req, res){
-        let newPrinter = new Printer(req.json)
-        Database.printers[ newPrinter.uuid ] = newPrinter; // define by UUID
-
+     createPrinter(body, res){
+        let newPrinter = new ServerPrinter(body.data)
+        // tell all clients to add this printer
         ClientCommand({
             command: "createPrinter",
-            json: newPrinter
+            data: newPrinter
         })
-
         res.status(200).send();
-        saveDatabase();
+    },
+
+    /** Requests list of printers and adds them clientside
+     * @param {JSON} body Incoming request data
+     * @param {Response} res Output response data
+     */
+     getPrinters(body, res){
+        res.json(Database.printers).status(200).send()
     },
 
     /** Long-polling response
-     * @param {Request} req Incoming request data
+     * @param {JSON} body Incoming request data
      * @param {Response} res Output response data
      */
-    ping(req, res){
+     ping(body, res){
         Clients.push(res); // the idea here is to keep Clients filled with all active clients
     }
 
@@ -106,12 +117,13 @@ let ServerCommands = {
 /** Handler function for incoming requests
  * @param {Request} req Incoming request data
  * @param {Response} res Output response data
- */
+*/
 function Handler(req, res){
 
     const body = req.body;
 
-    console.log(body)
+    // console.log(body)
+
     if( body.command == undefined ){ 
         return false; // forward request to other stuff in my server box
     }
