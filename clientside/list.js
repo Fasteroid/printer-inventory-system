@@ -7,10 +7,6 @@
     Authors:  Fasteroid
 */
 
-//if( window.origin!="null" ){ // CORS
-    //const Printer = require("../printer");
-//}
-
 const ListHeaderHTML = document.getElementById("list-headers");
 const ListInputHTML  = document.getElementById("list-inputs");
 const ListHTML       = document.getElementById("list");
@@ -26,7 +22,8 @@ async function ServerCommand(data){
         "http://68.84.141.134",
         {
             headers: {
-                "content-type":"application/json"
+                "content-type":"application/json",
+                "Access-Control-Allow-Origin":"*"
             },
             body: JSON.stringify(data),
             method: "POST"
