@@ -23,7 +23,6 @@ async function ServerCommand(data){
         {
             headers: {
                 "content-type":"application/json",
-                "Access-Control-Allow-Origin":"*"
             },
             body: JSON.stringify(data),
             method: "POST"
