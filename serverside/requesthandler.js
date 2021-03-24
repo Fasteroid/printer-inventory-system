@@ -10,6 +10,7 @@
 
 const Files = require('fs');
 const Printer = require('../printer.js');
+const User = require('../user.js');
 const SECRET_API_TOKEN = Files.readFileSync('./master_key.txt');  // repo is public, not putting this in plaintext...
 const TIMEOUT_INTERVAL = 5000; // refresh long polling every x ms
 console.log("[COMPSCI III]: SERVERSIDE LOADED, TOKEN = "+SECRET_API_TOKEN);
@@ -37,7 +38,7 @@ console.log("[COMPSCI III]: SERVERSIDE LOADED, TOKEN = "+SECRET_API_TOKEN);
         console.log("[COMPSCI III]: database.json malformed or not found, creating one...")
         Database.users = [ ];
         Database.printers = [ ];
-        Database.uuid = 0;
+        Database.uuid = 0; // uuid for the next printer
         saveDatabase();
     }
 ///
@@ -55,6 +56,21 @@ class ServerPrinter extends Printer {
     }
     remove(){
         delete Database[this.uuid];
+        saveDatabase();
+    }
+}
+
+class ServerUser extends User {
+    /** Constructs a new printer object and automatically puts it in the database.
+     * @param obj clientside data
+    */
+    constructor(obj){
+        super(obj);
+        Database.users[this.email] = this;
+        saveDatabase();
+    }
+    remove(){
+        delete Database[this.email];
         saveDatabase();
     }
 }
@@ -82,7 +98,21 @@ setInterval( retry, TIMEOUT_INTERVAL ); // timeouts
 
 let ServerCommands = {
 
-    /** Adds a printer serverside 
+    /** Adds a printer serverside, then adds it clientside for all clients
+     * @param {JSON} body Incoming request data
+     * @param {Response} res Output response data
+     */
+     createPrinter(body, res){
+        let newPrinter = new ServerPrinter(body.data)
+        // tell all clients to add this printer
+        ClientCommand({
+            command: "createPrinter",
+            data: newPrinter
+        })
+        res.status(200).send();
+    },
+
+    /** Deletes a printer serverside, then deletes it from all clients
      * @param {JSON} body Incoming request data
      * @param {Response} res Output response data
      */
@@ -101,7 +131,19 @@ let ServerCommands = {
      * @param {Response} res Output response data
      */
      getPrinters(body, res){
-        res.json(Database.printers).status(200).send()
+        res.json(Database.printers)
+        .status(200)
+        .send()
+    },
+
+    /** Requests list of users and adds them clientside
+     * @param {JSON} body Incoming request data
+     * @param {Response} res Output response data
+     */
+     getUsers(body, res){
+        res.json(Database.users)
+        .status(200)
+        .send()
     },
 
     /** Long-polling response
