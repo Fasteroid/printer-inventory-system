@@ -30,21 +30,15 @@ async function ServerCommand(data){
     );
 }
 
-class ClientPrinter extends Printer {
-    constructor(data){
-        super(data);
-        Printers.push(this);
-    }
-    remove(){
-        Printers = Printers.filter( item => item!=this );
-    }
-}
-
 /** Used to create the HTML for entries of the printer list */
-class ListEntry {
-    constructor( object ){
+class ClientPrinter extends Printer {
+    constructor(object){
 
+        super(object);
+        this.uuid = object.uuid;
         let self = this; // avoid confusing behavior runtime-evaluation of 'this'
+
+        Printers[object.uuid] = self;
 
         self.HTML = document.createElement("tr"); // create table row
             for ( const attribute in Printer.attributes ) {
@@ -58,14 +52,24 @@ class ListEntry {
             let data = document.createElement("td"); // create table data
                 let button = document.createElement("button"); // create button
                     button.innerText = "Remove";
+                    console.log(self)
                     button.onclick = function(){
-                        self.HTML.remove();
-                        object.remove();
+                        ServerCommand({
+                            command: "removePrinter",
+                            data: { uuid: self.uuid }
+                        })
                     }
             data.append(button); // end table data
         self.HTML.append(data); // end table row
 
     }
+
+    remove(){
+        console.log("yeeting printer", this)
+        this.HTML.remove();
+        delete Printers[this.uuid];
+    }
+
 }
 
 /** 

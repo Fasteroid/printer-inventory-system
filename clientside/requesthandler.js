@@ -15,8 +15,15 @@ let ClientCommands = {
      * @param {JSON} data Returned data from server
      */
     createPrinter(data){
-        let newPrinterHTML = new ListEntry( new ClientPrinter(data) );
+        let newPrinterHTML = new ClientPrinter(data);
         ListHTML.prepend( newPrinterHTML.HTML ); 
+    },
+
+    /** Removes a printer clientside
+     * @param {JSON} data Returned data from server
+     */
+     removePrinter(data){
+        Printers[data.uuid].remove();
     },
 
 }
@@ -27,7 +34,6 @@ async function longPolling() {
     let response = await ServerCommand({
         command: "ping"
     })
-    console.log(response);
   
     if (response.status == 502) {
         // Status 502 is a connection timeout error, refresh the connection and try again!
@@ -45,13 +51,23 @@ longPolling();
 
 
 async function init(){
+
+    // ask the server for the printers list, store the response in data
     let data = await ServerCommand({
         command: "getPrinters"
     })
+
+    // convert the response to a javascript object
     let json = await data.json()
+
+    // log it to make sure it looks good
     console.log(json)
-    for( printer of json ){
-        ClientCommands.createPrinter(printer);
+
+    // for every entry in the javascript object, spawn printers by calling createPrinter from ClientCommands
+    for( let uuid in json ){
+        ClientCommands.createPrinter( json[uuid] );
     }
+    
 }
+
 init();
