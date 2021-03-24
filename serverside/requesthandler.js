@@ -38,8 +38,8 @@ class ServerUser extends User {
     /** Constructs a new printer object and automatically puts it in the database.
      * @param obj clientside data
     */
-    constructor(obj){
-        super(obj);
+    constructor(email,pass,perm){
+        super(email,pass,perm);
         Database.users[this.email] = this;
         saveDatabase();
     }
@@ -65,13 +65,23 @@ class ServerUser extends User {
         if( Database.users == undefined ){ throw "Missing 'users' field" }
         if( Database.printers == undefined  ){ throw "Missing 'users' field" }
         if( Database.uuid == undefined ){ throw "Missing 'uuid' field" }
+
         for( let uuid in Database.printers ){
             if( Database.printers[uuid] ){ // ignore anything null
                 let cast = new ServerPrinter()
-                Object.assign( cast, Database.printers[uuid] ); // ugly hack
+                Object.assign( cast, Database.printers[uuid] ); // ugly hack, cast the loaded stuff to objects
                 Database.printers[uuid] = cast;
             }
         }
+
+        for( let email in Database.users ){
+            if( Database.users[email] ){ // ignore anything null
+                let cast = new ServerUser()
+                Object.assign( cast, Database.users[email] ); // ugly hack, cast the loaded stuff to objects
+                users.printers[email] = cast;
+            }
+        }
+
         console.log( "[COMPSCI III]: database.json loaded" )
     }
     catch(e){
