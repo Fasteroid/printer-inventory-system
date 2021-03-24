@@ -23,7 +23,7 @@ class Printer {
     /** Constructs a new printer object. Don't modify anything in this class from outside. 
      * @param obj data to be turned into a printer
     */
-    constructor(obj){
+    constructor(obj = {}){
         for( let property in Printer.attributes ){
             this[property] = obj[property];
         }

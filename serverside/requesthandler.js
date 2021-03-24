@@ -15,47 +15,21 @@ const SECRET_API_TOKEN = Files.readFileSync('./master_key.txt');  // repo is pub
 const TIMEOUT_INTERVAL = 5000; // refresh long polling every x ms
 console.log("[COMPSCI III]: SERVERSIDE LOADED, TOKEN = "+SECRET_API_TOKEN);
 
-    
-/// DATABASE INIT
-    let Database = {};
-    /** Saves the database to an external file. */
-    function saveDatabase() {
-        Files.writeFile('./database.json', JSON.stringify(Database), function(err) {
-            if( err ){ console.warn(err) }
-            else{ console.log( "[COMPSCI III]: database.json saved" ) }
-        });
-    }
-    try{
-        let fileData = Files.readFileSync('./database.json');
-        Database = JSON.parse(fileData);
-        // both checks should pass if this is usable data
-        if( !Database.users ){ throw "Missing 'users' field" }
-        if( !Database.printers ){ throw "Missing 'users' field" }
-        if( !Database.uuid ){ throw "Missing 'uuid' field" }
-        console.log( "[COMPSCI III]: database.json loaded" )
-    }
-    catch(e){
-        console.log("[COMPSCI III]: database.json malformed or not found, creating one...")
-        Database.users = [ ];
-        Database.printers = [ ];
-        Database.uuid = 0; // uuid for the next printer
-        saveDatabase();
-    }
-///
-
 class ServerPrinter extends Printer {
     /** Constructs a new printer object and automatically puts it in the database.
      * @param obj clientside data
     */
     constructor(obj){
         super(obj);
-        this.uuid = Database.uuid;
-        Database.uuid++;
-        Database.printers[this.uuid] = this;
-        saveDatabase();
+        if(obj){ // do nothing if no-arg
+            this.uuid = Database.uuid;
+            Database.uuid++;
+            Database.printers[this.uuid] = this;
+            saveDatabase();
+        }
     }
     remove(){
-        delete Database[this.uuid];
+        delete Database.printers[this.uuid];
         saveDatabase();
     }
 }
@@ -70,10 +44,44 @@ class ServerUser extends User {
         saveDatabase();
     }
     remove(){
-        delete Database[this.email];
+        delete Database.users[this.email];
         saveDatabase();
     }
 }
+    
+/// DATABASE INIT
+    let Database = { };
+    /** Saves the database to an external file. */
+    function saveDatabase() {
+        Files.writeFile('./database.json', JSON.stringify(Database), function(err) {
+            if( err ){ console.warn(err) }
+            else{ console.log( "[COMPSCI III]: database.json saved" ) }
+        });
+    }
+    try{
+        let fileData = Files.readFileSync('./database.json');
+        Database = JSON.parse(fileData);
+        // both checks should pass if this is usable data
+        if( Database.users == undefined ){ throw "Missing 'users' field" }
+        if( Database.printers == undefined  ){ throw "Missing 'users' field" }
+        if( Database.uuid == undefined ){ throw "Missing 'uuid' field" }
+        for( let uuid in Database.printers ){
+            if( Database.printers[uuid] ){ // ignore anything null
+                let cast = new ServerPrinter()
+                Object.assign( cast, Database.printers[uuid] ); // ugly hack
+                Database.printers[uuid] = cast;
+            }
+        }
+        console.log( "[COMPSCI III]: database.json loaded" )
+    }
+    catch(e){
+        console.log("[COMPSCI III]: database.json error: " + e)
+        Database.users = { };
+        Database.printers = { };
+        Database.uuid = 0; // uuid for the next printer
+        saveDatabase();
+    }
+///
 
 let Clients = [];
 
@@ -102,17 +110,18 @@ let ServerCommands = {
      * @param {JSON} body Incoming request data
      * @param {Response} res Output response data
      */
-     createPrinter(body, res){
-        let newPrinter = new ServerPrinter(body.data)
+     createUser(body, res){
+        let newUser = new ServerUser(body.data)
         // tell all clients to add this printer
         ClientCommand({
-            command: "createPrinter",
-            data: newPrinter
+            command: "createUser",
+            data: newUser
         })
         res.status(200).send();
     },
+    
 
-    /** Deletes a printer serverside, then deletes it from all clients
+    /** Creates a printer serverside, then creates it on all clients
      * @param {JSON} body Incoming request data
      * @param {Response} res Output response data
      */
@@ -124,6 +133,23 @@ let ServerCommands = {
             data: newPrinter
         })
         res.status(200).send();
+    },
+
+    /** Deletes a printer serverside, then deletes it on all clients
+     * @param {JSON} body Incoming request data
+     * @param {Response} res Output response data
+     */
+     removePrinter(body, res){
+
+        let toDelete = body.data.uuid
+        Database.printers[toDelete].remove()
+
+        ClientCommand({
+            command: "removePrinter",
+            data: { uuid: toDelete }
+        })
+        res.status(200).send();
+
     },
 
     /** Requests list of printers and adds them clientside
