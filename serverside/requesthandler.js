@@ -89,7 +89,7 @@ class ServerUser extends User {
         Database.users = { };
         Database.printers = { };
         Database.uuid = 0; // uuid for the next printer
-        saveDatabase();
+        // saveDatabase();
     }
 ///
 
