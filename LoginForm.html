@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html style="background-color: #2f3234;">
+
+<head>
+
+    <script src="clientside/sorttable.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> 
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <!-- this div starts empty; we'll add stuff to it later -->
+    <middle>
+        <table class="sortable">
+            <thead>
+                <tr id="list-headers">
+                </tr>
+            </thead>
+            <tfoot style="display: table-header-group"> <!-- Display with the header WITHOUT breaking sorttable.js -->
+                <tr id="list-inputs">
+                </tr>
+            </tfoot>
+            <tbody id="list">
+
+            </tbody>
+        </table>
+        
+    </middle>
+    
+</body>
+
+    <!-- This has to load after the DOM elements it manipulates -->
+    <script src="user.js"></script>
+    <script src="Login/tester.js"></script>
+    <script src="clientside/requesthandler.js"></script>
+
+</html>
