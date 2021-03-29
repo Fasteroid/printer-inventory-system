@@ -78,7 +78,7 @@ class ServerUser extends User {
             if( Database.users[email] ){ // ignore anything null
                 let cast = new ServerUser()
                 Object.assign( cast, Database.users[email] ); // ugly hack, cast the loaded stuff to objects
-                users.printers[email] = cast;
+                Database.users[email] = cast;
             }
         }
 
