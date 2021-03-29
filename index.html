@@ -50,14 +50,21 @@
         </div>
     </middle>
 
-    <overlay id="popupPaneOverlay">
+    <overlay id="popup-pane-overlay">
         <window class="standard">
             <header>
-                <text id="windowTitle">Window Title</text>
+                <text id="popup-title">Window Title</text>
                 <xbutton>&#10005;</xbutton>
             </header>
+            <div id="popup-content">
+                <div></div>
+            </div>
         </window>
     </overlay>
+
+    <div hidden="true" id="proof-of-concept">
+        Window Content Goes Here!
+    </div>
     
 </body>
 
@@ -65,6 +72,7 @@
     <script src="printer.js"></script>
     <script src="clientside/search.js"></script>
     <script src="clientside/list.js"></script>
+    <script src="clientside/popupPane.js"></script>
     <script src="clientside/requesthandler.js"></script>
 
 </html>
