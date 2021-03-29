@@ -18,5 +18,10 @@ for ( const attribute in Printer.attributes ) {
         button.value = attribute; // don't need nice names here
     SearchForm.append(button); // end radio button
 
+    let label = document.createElement("label"); // create label
+        label.innerText = Printer.attributes[attribute];
+    SearchForm.append(label); // end label
+
+    SearchForm.append(document.createElement("br")); // add break
 }
 // ------------------------------------------------------------- //
