@@ -22,7 +22,12 @@
 
     <!-- this div starts empty; we'll add stuff to it later -->
     <middle>
-        <div>LEFT</div>
+        <div>
+            <form id="search-form">
+                <label for="psearch">Printer Search </label>
+                <input type="search" id="psearch" name="psearch">
+            </form>
+        </div>
         <table class="sortable">
             <thead>
                 <tr id="list-headers">
@@ -37,11 +42,6 @@
             </tbody>
         </table>
         <div>RIGHT
-            <form>
-                <label for="psearch">Printer Search </label>
-                <input type="search" id="psearch" name="psearch">
-                <input type="submit">
-            </form>
         </div>
     </middle>
 
@@ -54,6 +54,7 @@
 
     <!-- This has to load after the DOM elements it manipulates -->
     <script src="printer.js"></script>
+    <script src="clientside/search.js"></script>
     <script src="clientside/list.js"></script>
     <script src="clientside/requesthandler.js"></script>
 
