@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
  *  requesthandler.js
- *  Mini Server-Side API for file storage!
+ *  Mini Server-Side API for file storage.
  *  NOTE: Requires an API token.  Don't use without the API token.
  * 
- *  Author: Fasteroid
- *  CONTACT ME BEFORE MODIFYING THIS
+ *  Authors: Fasteroid, Javier (in spirit)
+ *  CONTACT FAST BEFORE MODIFYING THIS
 ----------------------------------------------------------------*/
 
 

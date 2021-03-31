@@ -5,6 +5,7 @@
 
     First Edit:  Fasteroid
     Authors:  Fasteroid
+    Notes: "Speculative generality" my ass, I'd rather be safe than sorry.
 */
 
 class Printer {
