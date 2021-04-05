@@ -9,6 +9,7 @@
 
 
 const Files = require('fs');
+const { brotliDecompressSync } = require('zlib');
 const Printer = require('../printer.js');
 const User = require('../user.js');
 const SECRET_API_TOKEN = Files.readFileSync('./master_key.txt');  // repo is public, not putting this in plaintext...
@@ -35,13 +36,16 @@ class ServerPrinter extends Printer {
 }
 
 class ServerUser extends User {
-    /** Constructs a new printer object and automatically puts it in the database.
+    /** Constructs a new user object and automatically puts it in the database.
      * @param obj clientside data
     */
-    constructor(email,pass,perm){
-        super(email,pass,perm);
-        Database.users[this.email] = this;
-        saveDatabase();
+    constructor(email, perms, token){
+        super(email,perms);
+        this.token = token;
+        if(email){ // do nothing if no-arg
+            Database.users[this.email] = this;
+            saveDatabase();
+        }
     }
     remove(){
         delete Database.users[this.email];
@@ -121,11 +125,11 @@ let ServerCommands = {
      * @param {Response} res Output response data
      */
      createUser(body, res){
-        let newUser = new ServerUser(body.data)
-        // tell all clients to add this printer
+        let newUser = new ServerUser(body.data.email,body.data.perms,body.data.token)
+        // tell all clients to add this user
         ClientCommand({
             command: "createUser",
-            data: newUser
+            data: {email: body.data.email}
         })
         res.status(200).send();
     },
