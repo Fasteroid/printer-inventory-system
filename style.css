@@ -141,3 +141,8 @@ div.inner {
 windowcontent {
     text-align: center;
 }
+
+div.error {
+    color: #ff0000;
+    padding: 5px 5px;
+}
