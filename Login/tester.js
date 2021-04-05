@@ -1,3 +1,5 @@
+//const { User } = require("../user");
+
 const ListHeaderHTML = document.getElementById("list-headers");
 const ListInputHTML  = document.getElementById("list-inputs");
 const ListHTML       = document.getElementById("list");
@@ -32,7 +34,7 @@ class ClientUser extends User {
         Users[object.email] = self;
 
         self.HTML = document.createElement("tr"); // create table row
-            for ( const attribute in Printer.attributes ) {
+            for ( const attribute in User.attributes ) {
                 let value = object[attribute];
                 let data = document.createElement("td"); // create table data
                     data.className = "entry";
@@ -46,7 +48,7 @@ class ClientUser extends User {
                     console.log(self)
                     button.onclick = function(){
                         ServerCommand({
-                            command: "removePrinter",
+                            command: "removeUser",
                             data: { email: self.email }
                         })
                     }
@@ -56,7 +58,7 @@ class ClientUser extends User {
     }
 
     remove(){
-        console.log("yeeting printer", this)
+        console.log("yeeting User", this)
         this.HTML.remove();
         delete Users[this.email];
     }
