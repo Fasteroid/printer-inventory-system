@@ -26,7 +26,7 @@ async function ServerCommand(data){
 /** Used to create the HTML for entries of the printer list */
 class ClientUser extends User {
     constructor(object){
-
+    
         super(object);
         this.email = object.email;
         let self = this; // avoid confusing behavior runtime-evaluation of 'this'
@@ -34,7 +34,7 @@ class ClientUser extends User {
         Users[object.email] = self;
 
         self.HTML = document.createElement("tr"); // create table row
-            for ( const attribute in User.attributes ) {
+            for ( const attribute in self ) {
                 let value = object[attribute];
                 let data = document.createElement("td"); // create table data
                     data.className = "entry";
