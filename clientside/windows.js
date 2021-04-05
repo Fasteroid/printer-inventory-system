@@ -8,7 +8,7 @@
 */
 
 
-var WindowContent   = document.getElementById("window-content");
+var   WindowContent = document.getElementById("window-content");
 const WindowOverlay = document.getElementById("window-pane");
 const WindowName    = document.getElementById("window-title");
 
@@ -18,7 +18,16 @@ const WindowName    = document.getElementById("window-title");
 function setWindow(name) {
     let window = document.getElementById(name + "-window");
     WindowContent.replaceChild( window.cloneNode(true), WindowContent.firstChild );
+    WindowName.innerText = name;
     // no need to unhide these anymore since they're all stored in a hidden div :)
 }
 
-setWindow( "Login" )
+function hideWindow() {
+    WindowOverlay.className = "hidden"
+}
+
+function showWindow() {
+    WindowOverlay.className = ""
+}
+
+setWindow("Login")

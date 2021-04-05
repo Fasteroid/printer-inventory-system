@@ -17,28 +17,6 @@ let ClientCommands = {
 
 }
 
-/** Long polling loop. Periodically refreshed by the server and supplies updates on data changes */
-async function longPolling() {
-
-    let response = await ServerCommand({
-        command: "ping"
-    })
-  
-    if (response.status == 502) {
-        // Status 502 is a connection timeout error, refresh the connection and try again!
-        await longPolling();
-    } else {
-        let json = await response.json();
-        if( ClientCommands[json.command] ){ // hand off this request to its respective function
-            ClientCommands[json.command](json.data);
-        }
-        await longPolling();
-    }
-    
-}
-longPolling();
-
-
 async function init(){
 
     // ask the server for the printers list, store the response in data

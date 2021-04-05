@@ -54,33 +54,32 @@
         <window class="standard">
             <header>
                 <text id="window-title">Window Title</text>
-                <xbutton>&#10005;</xbutton>
+                <xbutton onclick="hideWindow()"">&#10005;</xbutton>
             </header>
-            <div id="window-content">
+            <windowcontent id="window-content">
                 <div></div>
-            </div>
+            </windowcontent>
         </window>
     </overlay>
 
-    <div hidden="true" id="window-storage">
-        // Login
-        <div id="Login-window">
+    <div hidden id="window-storage">
+        <!-- Login -->
+        <div id="Login-window" class="inner">
             Email <input type="text" id="login-user" placeholder="email"><br>
             Password <input type="password" id="login-pass" placeholder="password"><br>
             <input type="Submit" value="Log In" onClick="tryLogin()">
         </div>
         
-        // Create User
-        
-        <div id="Add User-window">
+        <!-- Create User -->
+        <div id="Add User-window" class="inner">
             Email <input type="text" id="adduser-user" placeholder="email">
             Password <input type="password" id="adduser-pass" placeholder="password">
             Is Admin? <input type="checkbox" id="adduser-admin">
             <input type="Submit" value="Add User" onclick="addUser()">
         </div>
         
-        // Modify User
-        <div id="Modify User-window">
+        <!-- Modify User -->
+        <div id="Modify User-window" class="inner">
             Email <select id="moduser-dropdown" name="moduser-select">
                 <!-- To be populated with valid users -->
             </select><br>
@@ -89,21 +88,21 @@
             <input type="Submit" value="Modify User" onclick="modUser()">
         </div>
         
-        // Delete User
-        <div id="Delete User-window">
+        <!-- Delete User -->
+        <div id="Delete User-window" class="inner">
             Email <select id="deluser-dropdown" name="deluser-select">
                 <!-- To be populated with valid users -->
             </select><br>
             <input type="Submit" value="Delete User" onclick="delUser()">
         </div>
         
-        // Report
-        <div id="Report-window">
+        <!-- Generate Report -->
+        <div id="Report-window" class="inner">
             <!-- To be populated with search data -->
         </div>
         
-        // Manual
-        <div id="Manual-window">
+        <!-- Manual -->
+        <div id="Manual-window" class="inner">
             Todo.
             <!-- TODO -->
         </div>
@@ -113,6 +112,8 @@
 
     <!-- This has to load after the DOM elements it manipulates -->
     <script src="printer.js"></script>
+    <script src="user.js"></script>
+    <script src="clientside/login.js"></script>
     <script src="clientside/search.js"></script>
     <script src="clientside/list.js"></script>
     <script src="clientside/windows.js"></script>

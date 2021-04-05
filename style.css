@@ -91,17 +91,14 @@ overlay {
     align-items: center;
 }
 
+overlay.hidden{
+    display: none;
+}
+
 window.standard {
-    width: 30%;
-    height: 30%;
     background-color: #ffffff;
 }
 
-window.big {
-    width: 50%;
-    height: 60%;
-    background-color: #ffffff;
-}
 window > header {
     position: relative;
     background-color: #00843c;
@@ -134,4 +131,13 @@ window > header > xbutton{
 }
 window > header > xbutton:active {
     background-color: #aa1919;
+}
+
+div.inner {
+    text-align: center;
+    padding: 10px 10px;
+}
+
+windowcontent {
+    text-align: center;
 }

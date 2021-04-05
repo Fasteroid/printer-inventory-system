@@ -129,7 +129,7 @@ let ServerCommands = {
         // tell all clients to add this user
         ClientCommand({
             command: "createUser",
-            data: {email: body.data.email}
+            data: { email: body.data.email, perms: body.data.perms }
         })
         res.status(200).send();
     },
