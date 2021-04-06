@@ -17,6 +17,7 @@ let ClientCommands = {
 
 }
 
+// merged into requesthandler clientside :)
 async function init(){
 
     // ask the server for the printers list, store the response in data
