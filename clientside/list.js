@@ -62,6 +62,7 @@ class ClientPrinter extends Printer {
             data.append(button); // end table data
         self.HTML.append(data); // end table row
 
+        ListHTML.prepend( self.HTML ); 
     }
 
     remove(){
@@ -69,7 +70,6 @@ class ClientPrinter extends Printer {
         this.HTML.remove();
         delete Printers[this.uuid];
     }
-
 }
 
 /** 

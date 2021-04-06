@@ -55,7 +55,7 @@
         <window class="standard">
             <header>
                 <text id="window-title">Window Title</text>
-                <xbutton onclick="hideWindow()"">&#10005;</xbutton>
+                <xbutton onclick="hideWindow()" class="hidden" id="header-close">&#10005;</xbutton>
             </header>
             <windowcontent id="window-content">
                 <div></div>
@@ -68,7 +68,8 @@
         <div id="Login-window" class="inner">
             Email <input type="text" id="login-user" placeholder="email"><br>
             Password <input type="password" id="login-pass" placeholder="password"><br>
-            <input type="Submit" value="Log In" onClick="tryLogin()">
+            <div id="login-error" class="error"></div>
+            <input type="Submit" value="Log In" onclick="tryLogin()">
         </div>
         
         <!-- Create User -->
@@ -116,6 +117,7 @@
     <script src="printer.js"></script>
     <script src="user.js"></script>
     <script src="clientside/login.js"></script>
+    <script src="clientside/loginlist.js"></script>
     <script src="clientside/search.js"></script>
     <script src="clientside/list.js"></script>
     <script src="clientside/windows.js"></script>

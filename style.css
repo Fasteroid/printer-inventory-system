@@ -132,17 +132,19 @@ window > header > xbutton{
 window > header > xbutton:active {
     background-color: #aa1919;
 }
+window > header > xbutton.hidden {
+    display: none;
+}
 
 div.inner {
-    text-align: center;
     padding: 10px 10px;
 }
 
-windowcontent {
-    text-align: center;
+div.inner > * {
+    margin: 3px 3px;
 }
 
 div.error {
     color: #ff0000;
-    padding: 5px 5px;
+    padding: 5px 0px;
 }

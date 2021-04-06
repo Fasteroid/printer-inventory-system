@@ -7,7 +7,26 @@
     Authors:  Fasteroid
 */
 
-
+/** Sends a json-based request to the server
+ * @param {JSON} data token, server command, additional data
+ */
+ async function ServerCommand(data){
+    data.cred = { }
+    data.cred.email = CurrentUser;
+    data.cred.token = CurrentToken;
+    const stringified = JSON.stringify(data)
+    console.log(stringified)
+    return await fetch(
+        "http://68.84.141.134",
+        {
+            headers: {
+                "content-type":"application/json",
+            },
+            body: stringified,
+            method: "POST"
+        }
+    );
+}
 
 let ClientCommands = {
 
@@ -15,8 +34,7 @@ let ClientCommands = {
      * @param {JSON} data Returned data from server
      */
     createPrinter(data){
-        let newPrinterHTML = new ClientPrinter(data);
-        ListHTML.prepend( newPrinterHTML.HTML ); 
+        new ClientPrinter(data);  // automatically edits clientside data
     },
 
     /** Removes a printer clientside
@@ -24,6 +42,20 @@ let ClientCommands = {
      */
      removePrinter(data){
         Printers[data.uuid].remove();
+    },
+
+    /** Adds a printer clientside
+     * @param {JSON} data Returned data from server
+     */
+     createUser(data){
+        new ClientUser(data.email, data.perms); // automatically edits clientside data
+    },
+
+    /** Removes a printer clientside
+     * @param {JSON} data Returned data from server
+     */
+     removeUser(data){
+        User[data.email].remove();
     },
 
 }
@@ -38,19 +70,21 @@ async function longPolling() {
     if (response.status == 502) {
         // Status 502 is a connection timeout error, refresh the connection and try again!
         await longPolling();
+        return;
     } else {
         let json = await response.json();
         if( ClientCommands[json.command] ){ // hand off this request to its respective function
             ClientCommands[json.command](json.data);
         }
         await longPolling();
+        return;
     }
     
 }
+
 longPolling();
 
-
-async function init(){
+async function initPrinters(){
 
     // ask the server for the printers list, store the response in data
     let data = await ServerCommand({
@@ -70,4 +104,22 @@ async function init(){
     
 }
 
-init();
+async function initUsers(){
+
+    // ask the server for the users list, store the response in data
+    let data = await ServerCommand({
+        command: "getUsers"
+    })
+
+    // convert the response to a javascript object
+    let json = await data.json()
+
+    // log it to make sure it looks good
+    console.log(json)
+
+    // for every entry in the javascript object, spawn printers by calling createPrinter from ClientCommands
+    for( let email in json ){
+        ClientCommands.createUser( json[email] );
+    }
+    
+}
