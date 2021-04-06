@@ -13,6 +13,17 @@ const Printer = require('../printer.js');
 const User = require('../user.js');
 const SECRET_API_TOKEN = Files.readFileSync('./master_key.txt');  // repo is public, not putting this in plaintext...
 const TIMEOUT_INTERVAL = 5000; // refresh long polling every x ms
+
+const PERMISSION_LEVELS = {
+    getUsers: 1,
+    getPrinters: 1,
+    createPrinter: 2,
+    createUser: 2,
+    removePrinter: 2,
+    removeUser: 2,
+    ping: 0,
+}
+
 console.log("[COMPSCI III]: SERVERSIDE LOADED, TOKEN = "+SECRET_API_TOKEN);
 
 class ServerPrinter extends Printer {
@@ -94,7 +105,7 @@ class ServerUser extends User {
         Database.users = { };
         Database.printers = { };
         Database.uuid = 0; // uuid for the next printer
-        // saveDatabase();
+        saveDatabase();
     }
 ///
 
@@ -119,7 +130,23 @@ function retry(){
 }
 setInterval( retry, TIMEOUT_INTERVAL ); // timeouts
 
-let ServerCommands = {
+/** 
+ * Returns a number between 0 and 2 representing the permission level of email & token
+ * @param cred credentials object
+ */
+function checkCredentials(cred){
+    if( cred == undefined ){ return 0 }
+    let user = Database.users[cred.email];
+    if( user == undefined ){ return 0 }
+    if(user.token != cred.token){
+        return 0; // you are not who you say you are
+    }
+    else{
+        return 1 + ( user.perms? 1 : 0 ); // return 1 if user, 2 if admin
+    }
+}
+
+const ServerCommands = {
 
     /** Adds a printer serverside, then adds it clientside for all clients
      * @param {JSON} body Incoming request data
@@ -155,7 +182,6 @@ let ServerCommands = {
      * @param {Response} res Output response data
      */
      removePrinter(body, res){
-
         let toDelete = body.data.uuid
         Database.printers[toDelete].remove()
 
@@ -164,7 +190,6 @@ let ServerCommands = {
             data: { uuid: toDelete }
         })
         res.status(200).send();
-
     },
 
     /** Requests list of printers and adds them clientside
@@ -196,15 +221,13 @@ let ServerCommands = {
         .send()
     },
 
-    /** Called clientside to check if we should let a user log in with the provided credentials
+    /** Does a user have the right password?
      * @param {JSON} body Incoming request data
      * @param {Response} res Output response data
      */
-     tryLogin(body, res){
-        let user = Database.users[ body.data.email ]
-        let allowed = { allowed: user.token == body.data.token }
-
-        res.json(allowed)
+     checkLogin(body, res){
+        let allowed = checkCredentials( body.cred )
+        res.json( {allowed: allowed} )
         .status(200)
         .send()
     },
@@ -233,7 +256,12 @@ function Handler(req, res){
         return false; // forward request to other stuff in my server box
     }
     else if( ServerCommands[body.command] ){ // hand off this request to its respective function
-        ServerCommands[body.command](body, res);
+        if( checkCredentials(body.cred) >= PERMISSION_LEVELS[body.command] ){
+            ServerCommands[body.command](body, res);
+        }
+        else{
+            res.status(403).send("forbidden");
+        }
     }
     else{
         res.status(500).send("bad request");
