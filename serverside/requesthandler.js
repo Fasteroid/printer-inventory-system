@@ -9,7 +9,6 @@
 
 
 const Files = require('fs');
-const { brotliDecompressSync } = require('zlib');
 const Printer = require('../printer.js');
 const User = require('../user.js');
 const SECRET_API_TOKEN = Files.readFileSync('./master_key.txt');  // repo is public, not putting this in plaintext...
@@ -37,7 +36,9 @@ class ServerPrinter extends Printer {
 
 class ServerUser extends User {
     /** Constructs a new user object and automatically puts it in the database.
-     * @param obj clientside data
+     * @param {String} email email to use
+     * @param {boolean} perms true if admin, false if not
+     * @param {String} token hashed combination of email and pass
     */
     constructor(email, perms, token){
         super(email,perms);
@@ -125,7 +126,7 @@ let ServerCommands = {
      * @param {Response} res Output response data
      */
      createUser(body, res){
-        let newUser = new ServerUser(body.data.email,body.data.perms,body.data.token)
+        let newUser = new ServerUser(body.data.email, body.data.perms, body.data.token)
         // tell all clients to add this user
         ClientCommand({
             command: "createUser",
@@ -181,7 +182,29 @@ let ServerCommands = {
      * @param {Response} res Output response data
      */
      getUsers(body, res){
-        res.json(Database.users)
+        let returnData = { }
+        for( let email in Database.users ){
+            let user = { }
+            user.email = email
+            user.perms = Database.users[email].perms
+            returnData[email] = user;
+        }
+        // sending tokens to the client is insecure and bad
+
+        res.json(returnData)
+        .status(200)
+        .send()
+    },
+
+    /** Called clientside to check if we should let a user log in with the provided credentials
+     * @param {JSON} body Incoming request data
+     * @param {Response} res Output response data
+     */
+     tryLogin(body, res){
+        let user = Database.users[ body.data.email ]
+        let allowed = { allowed: user.token == body.data.token }
+
+        res.json(allowed)
         .status(200)
         .send()
     },
