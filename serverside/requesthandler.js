@@ -21,7 +21,8 @@ const PERMISSION_LEVELS = {
     createUser: 2,
     removePrinter: 2,
     removeUser: 2,
-    ping: 0,
+    ping: 1,
+    checkLogin: 0,
 }
 
 console.log("[COMPSCI III]: SERVERSIDE LOADED, TOKEN = "+SECRET_API_TOKEN);
