@@ -23,12 +23,15 @@
     <!-- this div starts empty; we'll add stuff to it later -->
     <middle>
         <div>
+            <div style="height: 80px;"></div>
             <form id="search-form">
                 <i>Search...</i>
                 <input type="search" id="psearch" name="psearch">
                 <br>
                 <!-- to be populated by search.js -->
             </form>
+            <br>
+            <button onclick="window.print();" class="noPrint">Print Report</button>
         </div>
         <table class="sortable" class="noPrint">
             <thead>
@@ -46,8 +49,20 @@
             </tbody>
         </table>
         <div>
-            RIGHT
-            <button onclick="window.print();" class="noPrint">Print Report</button>
+            <div style="height: 80px;"></div>
+            <div hidden id="admin-panel" style="text-align: right;">
+                <button onclick="popWindow('Add User')">
+                    Add User...
+                </button>
+                <br>
+                <button onclick="popWindow('Modify User')">
+                    Modify User...
+                </button>
+                <br>
+                <button onclick="popWindow('Delete User')">
+                    Remove User...
+                </button>
+            </div>
         </div>
     </middle>
 
@@ -91,12 +106,12 @@
             <input type="Submit" value="Modify User" onclick="modUser()">
         </div>
         
-        <!-- Delete User -->
-        <div id="Delete User-window" class="inner">
-            Email <select id="deluser-dropdown" name="deluser-select">
+        <!-- Remove User -->
+        <div id="Remove User-window" class="inner">
+            Email <select id="remuser-dropdown" name="remuser-select">
                 <!-- To be populated with valid users -->
             </select><br>
-            <input type="Submit" value="Delete User" onclick="delUser()">
+            <input type="Submit" value="Remove User" onclick="remUser()">
         </div>
         
         <!-- Generate Report -->
@@ -117,7 +132,7 @@
     <script src="printer.js"></script>
     <script src="user.js"></script>
     <script src="clientside/login.js"></script>
-    <script src="clientside/loginlist.js"></script>
+    <script src="clientside/admining.js"></script>
     <script src="clientside/search.js"></script>
     <script src="clientside/list.js"></script>
     <script src="clientside/windows.js"></script>

@@ -30,7 +30,17 @@ middle > * {
 }
 
 button {
-    user-select: none
+    user-select: none;
+    cursor: pointer;
+    width: 100%
+}
+
+div #admin-panel > button {
+    margin: 4px 0px;
+}
+
+label {
+    cursor: pointer;
 }
 
 /* Makes inputs of the table not overlap and look weird */

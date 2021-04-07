@@ -1,5 +1,5 @@
 /*
-    loginlist.js
+    admining.js
 
     Manages dropdown lists of users and addition/removal/modification of users
 
@@ -9,7 +9,7 @@
 
 let Users = { };
 const ModuserDropdown = document.getElementById("moduser-dropdown");
-const DeluserDropdown = document.getElementById("deluser-dropdown");
+const RemuserDropdown = document.getElementById("remuser-dropdown");
 
 /** Used to populate admin dropdown lists */
 class ClientUser extends User {
@@ -26,24 +26,21 @@ class ClientUser extends User {
             self.ModuserOption.innerText = email + ( perms? " [admin]" : " [user]");
         ModuserDropdown.append( self.ModuserOption );
 
-        self.DeluserOption = document.createElement("option"); // create dropdown option
-        self.DeluserOption.value = email;
-        self.DeluserOption.innerText = email + ( perms? " [admin]" : " [user]");
-        DeluserDropdown.append( self.DeluserOption );
+        self.RemuserOption = document.createElement("option"); // create dropdown option
+        self.RemuserOption.value = email;
+        self.RemuserOption.innerText = email + ( perms? " [admin]" : " [user]");
+        RemuserDropdown.append( self.RemuserOption );
 
     }
 
     remove(){
         console.log("yeeting user", this);
         this.ModuserOption.remove();
-        this.DeluserOption.remove();
+        this.RemuserOption.remove();
         delete Users[this.email];
     }
 
 }
-
-
-
 
 /** 
  * Adds an element to the internal list of elements from the input fields.
@@ -56,6 +53,39 @@ class ClientUser extends User {
 
     const ErrorMsg = document.getElementById("adduser-error");
     
+    let userEmail = AddUserEmail.value;
+    let userPass  = AddUserPass.value;
+    let userIsAdmin  = AddUserAdmin.checked;
+
+    if(Users[userEmail]){
+        ErrorMsg.innerText = "email already in use..."
+        return; // refuse!
+    }
+
+    if(userPass.length < 8){
+        ErrorMsg.innerText = "password must be 8 or more chars..."
+        return; // refuse!
+    }
+
+    let newUser = new User(userEmail,userIsAdmin)
+    console.log(AddUserEmail)
+    newUser.token = genToken(userEmail,userPass);
+    ServerCommand({
+        command: "createUser",
+        data: newUser
+    })
+    AddUserEmail.value = ""
+    AddUserPass.value = ""   
+    //hideWindow();
+}
+
+/** 
+ * Adds an element to the internal list of elements from the input fields.
+ * Clears the input fields.
+ */
+ function remUser(){
+    const RemUserEmail = document.getElementById("remuser-user");
+
     let userEmail = AddUserEmail.value;
     let userPass  = AddUserPass.value;
     let userIsAdmin  = AddUserAdmin.checked;

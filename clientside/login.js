@@ -51,9 +51,13 @@ let CurrentToken = "0";
         const CloseButton = document.getElementById("header-close");
         CloseButton.className = ""; // show the close button
         hideWindow();
-        // do something super cool
-        let msg = new SpeechSynthesisUtterance("Welcome, "+CurrentUser);
-        window.speechSynthesis.speak(msg);  
+        if(allowed.allowed == 2){
+            const AdminButtons  = document.getElementById("admin-panel");
+            AdminButtons.hidden = false;
+            // do something super cool
+            let msg = new SpeechSynthesisUtterance("Welcome, "+CurrentUser);
+            window.speechSynthesis.speak(msg);  
+        }
     }
     else{
         const ErrorMsg = document.getElementById("login-error");

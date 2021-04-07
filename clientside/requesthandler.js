@@ -82,8 +82,6 @@ async function longPolling() {
     
 }
 
-longPolling();
-
 async function initPrinters(){
 
     // ask the server for the printers list, store the response in data
