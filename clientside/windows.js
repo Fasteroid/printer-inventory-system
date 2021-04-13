@@ -22,9 +22,19 @@ function setWindow(content) {
     // no need to unhide these anymore since they're all stored in a hidden div :)
 }
 
+/** Clears the popup window's contents and replaces it with [data expunged] to [redacted]
+ *  Pretty good for solving UI-related bugs
+ */
+function clearWindow() {
+    WindowContent.replaceChild( document.createElement("div"), WindowContent.firstChild );
+    WindowName.innerText = "lol";
+    // no need to unhide these anymore since they're all stored in a hidden div :)
+}
+
 /** Hides the popup window */
 function hideWindow() {
     WindowOverlay.className = "hidden"
+    clearWindow();
 }
 
 /** Shows the popup window */

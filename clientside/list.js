@@ -7,12 +7,13 @@
     Authors:  Fasteroid
 */
 
+const ListHTML       = document.getElementById("list");
 const ListHeaderHTML = document.getElementById("list-headers");
 const ListInputHTML  = document.getElementById("list-inputs");
-const ListHTML       = document.getElementById("list");
-const ListInputs     = { };
-let   Printers       = [ ];
+const ListInputs     = { }; // holds the printer entry fields for admins
+let   Printers       = [ ]; // holds ClientPrinters
 let   FirstInput;    // will be the first input so we can focus it after adding something
+
 
 /** Sends a json-based request to the server
  * @param {JSON} data token, server command, additional data
@@ -48,19 +49,20 @@ class ClientPrinter extends Printer {
                     data.innerText = value;
                 self.HTML.append(data); // end table data
             }  
-        
-            let data = document.createElement("td"); // create table data
-                let button = document.createElement("button"); // create button
-                    button.innerText = "Remove";
-                    console.log(self)
-                    button.onclick = function(){
-                        ServerCommand({
-                            command: "removePrinter",
-                            data: { uuid: self.uuid }
-                        })
-                    }
-            data.append(button); // end table data
-        self.HTML.append(data); // end table row
+            if( IsAdmin ){ // only show the remove buttons if the user is an admin
+                let data = document.createElement("td"); // create table data
+                    let button = document.createElement("button"); // create button
+                        button.innerText = "Remove";
+                        console.log(self)
+                        button.onclick = function(){
+                            ServerCommand({
+                                command: "removePrinter",
+                                data: { uuid: self.uuid }
+                            })
+                        }
+                    data.append(button); // end table data
+                self.HTML.append(data); // end table row
+            }
 
         ListHTML.prepend( self.HTML ); 
     }
@@ -73,7 +75,7 @@ class ClientPrinter extends Printer {
 }
 
 /** 
- * Adds an element to the internal list of elements from the input fields.
+ * Adds an element to the internal list of printers from the input fields.
  * Clears the input fields.
  */
 function AddListElement(){
@@ -95,40 +97,46 @@ function AddListElement(){
     FirstInput.focus();  // focus the first input so that the user can rapid-fire add stuff with tab
 }
 
+/** 
+ * Called to initialize the printer list.
+ * Should be called before adding printers or unexpected bugs may occur on client-side
+ */
+function initPrinterList(){
 
-// ---------------- GENERATE LIST HEADER BUTTONS ---------------- //
-for ( const attribute in Printer.attributes ) {
-
-    let data = document.createElement("th"); // create table header
-        data.innerText = Printer.attributes[attribute]; // retrieve nice names
-    ListHeaderHTML.append(data); // end table header
-
-}
-let data = document.createElement("th"); // create table header 'Action' last
-    data.innerText = "Action";
-ListHeaderHTML.append(data); // end table header
-// ------------------------------------------------------------- //
-
-
-// ---------------- GENERATE LIST INPUT UTILITY ---------------- //
-for ( const attribute in Printer.attributes ) {
-
-    let data = document.createElement("td"); // create table data
-        let input  = document.createElement("input");  // create input
-            input.className = "tableInput"
-        data.append(input); // end input input
-    ListInputHTML.append(data); // end table data
-    
-    ListInputs[attribute] = input;  // store these for easy access later
-    if( FirstInput == undefined ){ // snag first input
-        FirstInput = input;
+    // ---------------- GENERATE LIST HEADER BUTTONS ---------------- //
+    for ( const attribute in Printer.attributes ) {
+        let data = document.createElement("th"); // create table header
+            data.innerText = Printer.attributes[attribute]; // retrieve nice names
+        ListHeaderHTML.append(data); // end table header
     }
-    
+    if( IsAdmin ){
+        let data = document.createElement("th"); // create table header 'Action' last
+            data.innerText = "Action";
+        ListHeaderHTML.append(data); // end table header
+    }
+    // ------------------------------------------------------------- //
+
+
+    // ---------------- GENERATE LIST INPUT UTILITY ---------------- //
+    if( IsAdmin ){
+        for ( const attribute in Printer.attributes ) {
+
+            let data = document.createElement("td"); // create table data
+                let input  = document.createElement("input");  // create input
+                    input.className = "tableInput"
+                data.append(input); // end input input
+            ListInputHTML.append(data); // end table data
+            
+            ListInputs[attribute] = input;  // store these for easy access later
+            if( FirstInput == undefined ){ // snag first input
+                FirstInput = input;
+            }
+            
+        }
+        let button = document.createElement("button") // create 'Add' button last
+            button.onclick = AddListElement;
+            button.innerText = "Add"
+        ListInputHTML.append(button); // end button
+    }
+    // ------------------------------------------------------------- //
 }
-let button = document.createElement("button") // create 'Add' button last
-    button.onclick = AddListElement;
-    button.innerText = "Add"
-ListInputHTML.append(button); // end button
-// ------------------------------------------------------------- //
-
-

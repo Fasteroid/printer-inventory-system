@@ -9,8 +9,8 @@
 
 class User {
 
-    /** Constructs a new printer object. Don't modify anything in this class from outside. 
-     * @param obj data to be turned into a printer
+    /** Constructs a new user object. Don't modify anything in this class from outside. 
+     * @param obj data to be turned into a user
     */
     constructor(email, perms){
         if(email){ // do nothing if noarg

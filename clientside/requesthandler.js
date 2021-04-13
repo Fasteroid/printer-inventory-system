@@ -44,10 +44,13 @@ let ClientCommands = {
         Printers[data.uuid].remove();
     },
 
-    /** Adds a printer clientside
+    /** Adds a user clientside
      * @param {JSON} data Returned data from server
      */
      createUser(data){
+        if( data.modify && CurrentUser == data.email ){
+            location.reload(); // not dealing with users changing themselves, just force reload the window
+        }
         new ClientUser(data.email, data.perms); // automatically edits clientside data
     },
 
@@ -55,7 +58,10 @@ let ClientCommands = {
      * @param {JSON} data Returned data from server
      */
      removeUser(data){
-        User[data.email].remove();
+        if( CurrentUser == data.email ){
+            location.reload(); // not dealing with users changing themselves, just force reload the window
+        }
+        Users[data.email].remove();
     },
 
 }

@@ -82,7 +82,7 @@
         <!-- Login -->
         <div id="Login-window" class="inner">
             Email <input type="text" id="login-user" placeholder="email"><br>
-            Password <input type="password" id="login-pass" placeholder="password"><br>
+            Password <input type="password" id="login-pass" placeholder="password" onkeypress="if(event.keyCode==13){tryLogin();}"><br>
             <div id="login-error" class="error"></div>
             <input type="Submit" value="Log In" onclick="tryLogin()">
         </div>
@@ -104,14 +104,16 @@
             Password <input type="password" id="moduser-pass" placeholder="blank for no change"><br>
             Is Admin? <input type="checkbox" id="moduser-admin"><br>
             <input type="Submit" value="Modify User" onclick="modUser()">
+            <div id="moduser-error" class="error"></div>
         </div>
         
         <!-- Remove User -->
-        <div id="Remove User-window" class="inner">
+        <div id="Delete User-window" class="inner">
             Email <select id="remuser-dropdown" name="remuser-select">
                 <!-- To be populated with valid users -->
             </select><br>
             <input type="Submit" value="Remove User" onclick="remUser()">
+            <div id="remuser-error" class="error"></div>
         </div>
         
         <!-- Generate Report -->
@@ -129,13 +131,13 @@
 </body>
 
     <!-- This has to load after the DOM elements it manipulates -->
-    <script src="printer.js"></script>
-    <script src="user.js"></script>
-    <script src="clientside/login.js"></script>
-    <script src="clientside/admining.js"></script>
-    <script src="clientside/search.js"></script>
-    <script src="clientside/list.js"></script>
-    <script src="clientside/windows.js"></script>
-    <script src="clientside/requesthandler.js"></script>
+    <script  src="printer.js"></script>
+    <script  src="user.js"></script>
+    <script  src="clientside/login.js"></script>
+    <script  src="clientside/admining.js"></script>
+    <script  src="clientside/search.js"></script>
+    <script  src="clientside/list.js"></script>
+    <script  src="clientside/windows.js"></script>
+    <script  src="clientside/requesthandler.js"></script>
 
 </html>
