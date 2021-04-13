@@ -15,7 +15,7 @@ const SECRET_API_TOKEN = Files.readFileSync('./master_key.txt');  // repo is pub
 const TIMEOUT_INTERVAL = 5000; // refresh long polling every x ms
 
 const PERMISSION_LEVELS = {
-    getUsers: 1,
+    getUsers: 2,
     getPrinters: 1,
     createPrinter: 2,
     createUser: 2,
@@ -52,17 +52,24 @@ class ServerUser extends User {
      * @param {boolean} perms true if admin, false if not
      * @param {String} token hashed combination of email and pass
     */
-    constructor(email, perms, token){
+    constructor(email, perms, token, root){
         super(email,perms);
         this.token = token;
+        if(root){ this.root = true }
         if(email){ // do nothing if no-arg
+            let checkForRoot = Database.users[this.email]
+            if( checkForRoot && checkForRoot.root ){
+                this.root = true;
+            }
             Database.users[this.email] = this;
             saveDatabase();
         }
     }
     remove(){
-        delete Database.users[this.email];
-        saveDatabase();
+        if(!this.root){
+            delete Database.users[this.email];
+            saveDatabase();
+        }
     }
 }
     
@@ -87,7 +94,7 @@ class ServerUser extends User {
             if( Database.printers[uuid] ){ // ignore anything null
                 let cast = new ServerPrinter()
                 Object.assign( cast, Database.printers[uuid] ); // ugly hack, cast the loaded stuff to objects
-                Database.printers[uuid] = cast;
+                Database.printers[uuid] = cast; // stick em back in the database
             }
         }
 
@@ -95,7 +102,7 @@ class ServerUser extends User {
             if( Database.users[email] ){ // ignore anything null
                 let cast = new ServerUser()
                 Object.assign( cast, Database.users[email] ); // ugly hack, cast the loaded stuff to objects
-                Database.users[email] = cast;
+                Database.users[email] = cast; // stick em back in the database
             }
         }
 
@@ -106,16 +113,26 @@ class ServerUser extends User {
         Database.users = { };
         Database.printers = { };
         Database.uuid = 0; // uuid for the next printer
+        new ServerUser("admin",true,454892874,true) // nobodywillguessthispassword
         saveDatabase();
     }
 ///
 
 let Clients = [];
 
-/** Sends an update to all clients */ 
-function ClientCommand(upd){
+/** Sends a command to all clients, or optionally only users with the provided minimum permission ranking
+ * @param {Object} update `{command: <string>, data: { <args for command> } }`
+ * @param {Function} permissions recieves `permission number (0-2)`, and `user email`, return true to send and false not to.
+ * Leave blank to send to everyone
+*/ 
+function ClientCommand(update,permissions=() => {return true}){
     for( let id in Clients ){
-        Clients[id].json(upd).status(200).send();
+        if( permissions(Clients[id].perms,Clients[id].email) ){
+            Clients[id].response.json(update).status(200).send();
+        }
+        else{
+            console.log("ignored user: perms="+Clients[id].perms)
+        }
         delete Clients[id];
     }
 }
@@ -124,7 +141,7 @@ function ClientCommand(upd){
 function retry(){
     // console.log("Timing out clients...")
     for( let id in Clients ){
-        Clients[id].status(502).send();
+        Clients[id].response.status(502).send();
         Clients[id] = null;
         delete Clients[id];
     }
@@ -132,7 +149,7 @@ function retry(){
 setInterval( retry, TIMEOUT_INTERVAL ); // timeouts
 
 /** 
- * Returns a number between 0 and 2 representing the permission level of email & token
+ * Returns a number between 0 and 2 representing the permission level of supplied credentials & token
  * @param cred credentials object
  */
 function checkCredentials(cred){
@@ -147,20 +164,68 @@ function checkCredentials(cred){
     }
 }
 
+/** 
+ * Returns a number between 0 and 2 representing the permission level of an email, defaults to 0 if the email doesn't exist
+ * @param {String} email
+ * @returns credentials object
+*/
+function getCredentials(email){
+    // this would be a 1-liner if node.js supported optional chaining!
+    let user = Database.users[email]
+    if( user ){
+        return 1 + ( user.perms? 1 : 0 ); // return 1 if user, 2 if admin
+    }
+    else{
+        return 0;
+    }
+}
+
 const ServerCommands = {
 
-    /** Adds a printer serverside, then adds it clientside for all clients
+    /** Adds a user serverside, then adds it clientside for all admins
      * @param {JSON} body Incoming request data
      * @param {Response} res Output response data
      */
      createUser(body, res){
-        let newUser = new ServerUser(body.data.email, body.data.perms, body.data.token)
-        // tell all clients to add this user
-        ClientCommand({
-            command: "createUser",
-            data: { email: body.data.email, perms: body.data.perms }
-        })
-        res.status(200).send();
+        let user = Database.users[body.data.email]
+        if(user && user.root && !body.data.perms){ // prevent de-opping root
+            res.json( {allowed: false} )
+            .status(200)
+            .send();
+        }
+        else{
+            ClientCommand({
+                command: "createUser",
+                data: { email: body.data.email, perms: body.data.perms, modify: !!(Database.users[body.data.email]) } // please ignore these lines
+            }, (perms,email) => { return (email==body.data.email) || (perms >= PERMISSION_LEVELS.createUser) } ); // they are actually cancer
+            new ServerUser(body.data.email, body.data.perms, body.data.token); // this takes care of everything
+            res.json( {allowed: true} )
+            .status(200)
+            .send();
+        }
+    },
+
+    /** Removes a user serverside, then removes it clientside for all admins
+     * @param {JSON} body Incoming request data
+     * @param {Response} res Output response data
+     */
+     removeUser(body, res){
+        let user = Database.users[body.data.email]
+        if(!user.root){
+            user.remove();
+            ClientCommand({
+                command: "removeUser",
+                data: { email: body.data.email, perms: body.data.perms }
+            }); // alerting all clients to user deletion is fine
+            res.json( {allowed: true} )
+            .status(200)
+            .send();
+        }
+        else{
+            res.json( {allowed: false} )
+            .status(200)
+            .send();
+        }
     },
     
 
@@ -170,7 +235,7 @@ const ServerCommands = {
      */
      createPrinter(body, res){
         let newPrinter = new ServerPrinter(body.data)
-        // tell all clients to add this printer
+
         ClientCommand({
             command: "createPrinter",
             data: newPrinter
@@ -238,7 +303,7 @@ const ServerCommands = {
      * @param {Response} res Output response data
      */
      ping(body, res){
-        Clients.push(res); // the idea here is to keep Clients filled with all active clients
+        Clients.push( {response: res, perms: getCredentials(body.cred.email), email: body.cred.email } ); // keeps 'Clients' filled with active connections to ping back
     }
 
 }
