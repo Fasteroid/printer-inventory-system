@@ -12,8 +12,9 @@ class Printer {
     /** List of attributes each printer should have, paired with 'nice names' */
     static attributes = {
         barcode:      "Bar Code",
-        name:         "Name",
+        name:         "Model",
         category:     "Category",
+        location:     "Location",
         serial:       "Serial Number",
         manufacturer: "Manufacturer",
         division:     "Division",
