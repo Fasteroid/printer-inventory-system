@@ -59,14 +59,20 @@ class ClientUser extends User {
     let userIsAdmin  = AddUserAdmin.checked;
 
     if(Users[userEmail]){
-        ErrorMsg.innerText = "email already in use..."
+        ErrorMsg.innerText = "Email already in use..."
         return; // refuse!
     }
 
     if(userPass.length < 8){
-        ErrorMsg.innerText = "password must be 8 or more chars..."
+        ErrorMsg.innerText = "Password must be 8 or more chars..."
         return; // refuse!
     }
+    
+    if(userPass.search(/^[0-9!@#\$%\^\&*\)\(+=._-]/) == -1){
+        ErrorMsg.innerText = "Password needs at least 1 special char or number..."
+        return; // refuse!
+    }
+
 
     let newUser = new User(userEmail,userIsAdmin)
     console.log(AddUserEmail)
