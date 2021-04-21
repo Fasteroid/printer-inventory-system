@@ -15,7 +15,7 @@
     data.cred.email = CurrentUser;
     data.cred.token = CurrentToken;
     const stringified = JSON.stringify(data)
-    console.log(stringified)
+    // console.log(stringified)
     return await fetch(
         "http://68.84.141.134",
         {
@@ -99,7 +99,7 @@ async function initPrinters(){
     let json = await data.json()
 
     // log it to make sure it looks good
-    console.log(json)
+    // console.log(json)
 
     // for every entry in the javascript object, spawn printers by calling createPrinter from ClientCommands
     for( let uuid in json ){
@@ -119,7 +119,7 @@ async function initUsers(){
     let json = await data.json()
 
     // log it to make sure it looks good
-    console.log(json)
+    // console.log(json)
 
     // for every entry in the javascript object, spawn printers by calling createPrinter from ClientCommands
     for( let email in json ){

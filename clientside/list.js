@@ -53,7 +53,7 @@ class ClientPrinter extends Printer {
                 let data = document.createElement("td"); // create table data
                     let button = document.createElement("button"); // create button
                         button.innerText = "Remove";
-                        console.log(self)
+                        // console.log(self)
                         button.onclick = function(){
                             ServerCommand({
                                 command: "removePrinter",
@@ -65,6 +65,7 @@ class ClientPrinter extends Printer {
             }
 
         ListHTML.prepend( self.HTML ); 
+        research();
     }
 
     remove(){

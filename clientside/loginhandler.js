@@ -29,7 +29,7 @@ async function init(){
     let json = await data.json()
 
     // log it to make sure it looks good
-    console.log(json)
+    // console.log(json)
 
     // for every entry in the javascript object, spawn printers by calling createPrinter from ClientCommands
     for( let email in json ){
