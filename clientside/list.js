@@ -7,6 +7,7 @@
     Authors:  Fasteroid
 */
 
+const MainTable      = document.getElementById("maintable");
 const ListHTML       = document.getElementById("list");
 const ListHeaderHTML = document.getElementById("list-headers");
 const ListInputHTML  = document.getElementById("list-inputs");
@@ -66,6 +67,8 @@ class ClientPrinter extends Printer {
 
         ListHTML.prepend( self.HTML ); 
         research();
+        sorttable.makeSortable(MainTable);
+        
     }
 
     remove(){
