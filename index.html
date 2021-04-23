@@ -49,6 +49,9 @@
         </table>
         <div>
             <div style="height: 80px;"></div>
+            <button onclick="popWindow('Manual')">
+                Show Manual
+            </button>
             <div hidden id="admin-panel" style="text-align: right;">
                 <button onclick="popWindow('Add User')">
                     Add User...
@@ -115,15 +118,11 @@
             <div id="remuser-error" class="error"></div>
         </div>
         
-        <!-- Generate Report -->
-        <div id="Report-window" class="inner">
-            <!-- To be populated with search data -->
-        </div>
-        
         <!-- Manual -->
         <div id="Manual-window" class="inner">
-            Todo.
-            <!-- TODO -->
+            <iframe>
+
+            </iframe>
         </div>
     </div>
     
@@ -139,5 +138,5 @@
     <script  src="clientside/windows.js"></script>
     <script  src="clientside/requesthandler.js"></script>
     <script  src="autologin.js"></script>
-    <script  src="clientside/sorttable.js"></script>
+    <script  src="clientside/sorting.js"></script>
 </html>

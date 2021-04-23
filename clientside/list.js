@@ -2,6 +2,7 @@
     list.js
 
     Manages the printer list's HTML components.
+    Now also handles sorting.
 
     First Edit:  Fasteroid
     Authors:  Fasteroid
@@ -14,7 +15,6 @@ const ListInputHTML  = document.getElementById("list-inputs");
 const ListInputs     = { }; // holds the printer entry fields for admins
 let   Printers       = [ ]; // holds ClientPrinters
 let   FirstInput;    // will be the first input so we can focus it after adding something
-
 
 /** Sends a json-based request to the server
  * @param {JSON} data token, server command, additional data
@@ -67,7 +67,6 @@ class ClientPrinter extends Printer {
 
         ListHTML.prepend( self.HTML ); 
         research();
-        sorttable.makeSortable(MainTable);
         
     }
 
@@ -99,6 +98,23 @@ function AddListElement(){
         data: data
     })
     FirstInput.focus();  // focus the first input so that the user can rapid-fire add stuff with tab
+}
+
+function configureSorting(){
+    for( let id = 0; id < ListHeaderHTML.children.length; id++ ){
+        const td = ListHeaderHTML.children[id];
+        td.order = 1;
+        td.onclick = function(){
+            td.order = -td.order
+            let children = ListHTML.children;
+            [].slice.call(children).sort(function(a, b) {
+                return (a.children[id].innerText.localeCompare(b.children[id].innerText)) * td.order;
+            }).
+            forEach(function(val, index) {
+                ListHTML.appendChild(val);
+            });
+        }
+    }
 }
 
 /** 
@@ -143,4 +159,7 @@ function initPrinterList(){
         ListInputHTML.append(button); // end button
     }
     // ------------------------------------------------------------- //
+
+    configureSorting();
+
 }
