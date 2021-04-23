@@ -1,17 +1,14 @@
 /*----------------------------------------------------------------
  *  requesthandler.js
  *  Mini Server-Side API for file storage.
- *  NOTE: Requires an API token.  Don't use without the API token.
  * 
  *  Authors: Fasteroid, Javier (in spirit)
  *  CONTACT FAST BEFORE MODIFYING THIS
 ----------------------------------------------------------------*/
 
-
 const Files = require('fs');
 const Printer = require('../printer.js');
 const User = require('../user.js');
-const SECRET_API_TOKEN = Files.readFileSync('./master_key.txt');  // repo is public, not putting this in plaintext...
 const TIMEOUT_INTERVAL = 5000; // refresh long polling every x ms
 
 const PERMISSION_LEVELS = {
@@ -24,8 +21,6 @@ const PERMISSION_LEVELS = {
     ping: 1,
     checkLogin: 0,
 }
-
-console.log("[COMPSCI III]: SERVERSIDE LOADED, TOKEN = "+SECRET_API_TOKEN);
 
 class ServerPrinter extends Printer {
     /** Constructs a new printer object and automatically puts it in the database.
