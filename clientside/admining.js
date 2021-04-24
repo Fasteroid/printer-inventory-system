@@ -101,7 +101,7 @@ class ClientUser extends User {
 
     const ErrorMsg = document.getElementById("moduser-error");
     
-    let selected = document.getElementById("remuser-dropdown").selectedIndex; // this is required because otherwise we'll still be checking the element this window has selected in window storage
+    let selected = document.getElementById("moduser-dropdown").selectedIndex; // this is required because otherwise we'll still be checking the element this window has selected in window storage
     let userEmail = ModuserDropdown.options[selected].value;
     let userPass  = ModUserPass.value;
     let userIsAdmin  = ModUserAdmin.checked;
