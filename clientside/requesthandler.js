@@ -17,7 +17,7 @@
     const stringified = JSON.stringify(data)
     // console.log(stringified)
     return await fetch(
-        "http://68.84.141.134",
+        SERVER_DOMAIN,
         {
             headers: {
                 "content-type":"application/json",

@@ -8,12 +8,13 @@
 -->
 
 <!DOCTYPE html>
-<html style="background-color: #2f3234;">
+<html>
 
 <head>
 
-    <script src="clientside/sorttable.js"></script>
+    <script src="config.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> 
+    <script src="autologin.js"></script>
     <link rel="stylesheet" href="style.css">
 
 </head>
@@ -21,12 +22,13 @@
 <body>
 
     <!-- this div starts empty; we'll add stuff to it later -->
+    <img src="clientside/dtcc-logo.png">
     <middle>
         <div>
-            <div style="height: 80px;"></div>
+            <div style="height: 52px;"></div>
+            <i>Search...</i>
+            <input type="search" id="psearch" name="psearch" oninput="research()"><br>
             <form id="search-form">
-                <i>Search...</i>
-                <input type="search" id="psearch" name="psearch" oninput="research()"><br>
                 <!-- to be populated by search.js -->
             </form>
             <br>
@@ -48,10 +50,8 @@
             </tbody>
         </table>
         <div>
-            <div style="height: 80px;"></div>
-            <button onclick="popWindow('Manual')">
-                Show Manual
-            </button>
+            <div style="height: 60px;"></div>
+            <button onclick="popWindow('Manual')" style="margin: 4px 0px;">User Manual</button>
             <div hidden id="admin-panel" style="text-align: right;">
                 <button onclick="popWindow('Add User')">
                     Add User...
@@ -120,8 +120,7 @@
         
         <!-- Manual -->
         <div id="Manual-window" class="inner">
-            <iframe>
-
+            <iframe src="manual-v2.htm">
             </iframe>
         </div>
     </div>

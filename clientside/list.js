@@ -16,22 +16,6 @@ const ListInputs     = { }; // holds the printer entry fields for admins
 let   Printers       = [ ]; // holds ClientPrinters
 let   FirstInput;    // will be the first input so we can focus it after adding something
 
-/** Sends a json-based request to the server
- * @param {JSON} data token, server command, additional data
- */
-async function ServerCommand(data){
-    return await fetch(
-        "http://68.84.141.134",
-        {
-            headers: {
-                "content-type":"application/json",
-            },
-            body: JSON.stringify(data),
-            method: "POST"
-        }
-    );
-}
-
 /** Used to create the HTML for entries of the printer list */
 class ClientPrinter extends Printer {
     constructor(object){

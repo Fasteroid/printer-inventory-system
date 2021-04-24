@@ -18,6 +18,10 @@ class ClientUser extends User {
 
         super(email, perms);
 
+        if( Users[email] ){
+            Users[email].remove(); // fix for modifying users
+        }
+
         let self = this; // avoid confusing behavior runtime-evaluation of 'this'
         Users[email] = self;
         
@@ -68,7 +72,7 @@ class ClientUser extends User {
         return; // refuse!
     }
     
-    if(userPass.search(/^[0-9!@#\$%\^\&*\)\(+=._-]/) == -1){
+    if(userPass.search(/[0-9!@#\$%\^\&*\)\(+=._-]/) == -1){
         ErrorMsg.innerText = "Password needs at least 1 special char or number..."
         return; // refuse!
     }
@@ -103,7 +107,12 @@ class ClientUser extends User {
     let userIsAdmin  = ModUserAdmin.checked;
 
     if(userPass.length < 8){
-        ErrorMsg.innerText = "password must be 8 or more chars..."
+        ErrorMsg.innerText = "Password must be 8 or more chars..."
+        return; // refuse!
+    }
+    
+    if(userPass.search(/[0-9!@#\$%\^\&*\)\(+=._-]/) == -1){
+        ErrorMsg.innerText = "Password needs at least 1 special char or number..."
         return; // refuse!
     }
 
