@@ -1,5 +1,5 @@
 # College Projects: The Printer Inventory System
-<img src="https://raw.githubusercontent.com/Fasteroid/Fasteroid.github.io/main/readme-preview-image.png"></img>
+<img src="https://raw.githubusercontent.com/Fasteroid/printer-inventory-system/main/readme-preview-image.png"></img>
 ### Context
 This was a semester-long project engineered as part of CSC214 at Delaware Technical Community College.
 
