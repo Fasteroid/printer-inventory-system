@@ -9,7 +9,9 @@ Normally, this project is written in Java and has no networking capabilities, in
 We dreamed up a web app instead so that the hypothetical printer database could be accessed from any location of a hypothetical campus.<br>
 And it worked. &nbsp;We could. &nbsp;Take that, past semester classes!
 
-### Important
-Security was not implemented for this project during development both because of time constraints and because it was not a requirement.<br> As such, it should <b>never be used in production</b>—no exceptions!
+### Disclaimer
+The Printer Inventory System is a college project and has not been through any kind of rigorous testing.<br>
+
+Security for this project in particular was massively neglected—both because of time constraints and because it was not a requirement.<br> As such, it must <b>never be used in production</b>—no exceptions!
 
 If you're actually interested in using a variant of this system, contact a real software developer. &nbsp;This was a hypothetical system designed only to showcase how a similar real-world counterpart might function.
