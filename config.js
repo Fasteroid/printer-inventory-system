@@ -1,1 +1,1 @@
-const SERVER_DOMAIN = "http://68.84.141.134/";
+const SERVER_DOMAIN = "";
